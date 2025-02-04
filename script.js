@@ -39,8 +39,10 @@ async function onload() {
     const view = document.querySelector("#view");
     view.innerHTML = ""; // 기존 목록 초기화
 
-    for (const memo of memoData) {
+    // for (const memo of memoData) {
+    for (let i = 0; i < memoData.length; i++) {
       const memoElement = document.createElement("div");
+      const memo = memoData[i];
       memoElement.textContent = memo.text;
       memoElement.style.backgroundColor = memo.bgColor;
       view.appendChild(memoElement);
@@ -50,7 +52,10 @@ async function onload() {
       const deleteButton = document.createElement("button");
       deleteButton.textContent = "삭제";
       deleteButton.addEventListener("click", () => {
-        memoElement.remove();
+        // memoElement.remove();
+        memoData.splice(i, 1); // 배열에서 삭제
+        removeFromStorage(memo.id); // 로컬,세션에서 삭제
+        drawMemo(); // ui 다시
       });
       memoElement.appendChild(deleteButton);
 
@@ -100,6 +105,17 @@ async function onload() {
     } // end of for
   }
 
+  // 스토리지에서 삭제
+  function removeFromStorage(memoId) {
+    let localMemos = JSON.parse(localStorage.getItem("memoStorage")) ?? [];
+    localMemos = localMemos.filter((m) => m.id !== memoId);
+    localStorage.setItem("memoStorage", JSON.stringify(localMemos));
+
+    let sessionMemos = JSON.parse(sessionStorage.getItem("memoStorage")) ?? [];
+    sessionMemos = sessionMemos.filter((m) => m.id !== memoId);
+    sessionStorage.setItem("memoStorage", JSON.stringify(sessionMemos));
+  }
+
   // form#controller 제어
   const controller = document.querySelector("#controller");
   controller.addEventListener("submit", (event) => {
@@ -110,6 +126,7 @@ async function onload() {
     memo.text = form.get("memoText");
     memo.bgColor = form.get("memoBgColor");
     memo.link = form.get("memoLink");
+    memo.id = crypto.randomUUID(); // 관리를 위한 id 추가
 
     memoData.push(memo); // 메모데이터에 push
     drawMemo();
@@ -117,4 +134,5 @@ async function onload() {
 
   drawMemo();
 }
+
 onload();
