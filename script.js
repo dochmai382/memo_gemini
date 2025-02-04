@@ -9,34 +9,10 @@
 8. LLM을 통한 예시 메시지 생성
 */
 
-// // demo memo
-// const memo = {
-//   bgColor: "#f0edcc",
-//   text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae, nesciunt dignissimos aliquid sequi atque quam nobis! Vitae, accusantium modi ipsa facere dolore qui nobis, culpa, reprehenderit dolorem quia provident adipisci?",
-// };
-
 async function onload() {
   // Gemini를 통한 예시 메시지 생성
   async function useGemini() {
     const url = "https://ash-honeysuckle-wealth.glitch.me";
-    //   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-    //   const response = await fetch(url, {
-    //     method: "POST",
-    //     body: JSON.stringify({
-    //       contents: [
-    //         {
-    //           parts: [
-    //             // gemini에게 묻는 프롬프트
-    //             { text: "고양이의 귀여움에 대해 20자 내외로 말해줘" },
-    //           ],
-    //         },
-    //       ],
-    //     }),
-    //     // 필요한 옵션들 (차후 설명)
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
     const response = await fetch(url);
     return await response.text();
   }
@@ -51,12 +27,8 @@ async function onload() {
   }
   document.querySelector("#colorInput").value = goodBGColor();
 
-  // 여러 개의 메모 관리
+  // 메모데이터
   const memoData = [
-    // {
-    //   bgColor: goodBGColor(),
-    //   text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae, nesciunt dignissimos aliquid sequi atque quam nobis! Vitae, accusantium modi ipsa facere dolore qui nobis, culpa, reprehenderit dolorem quia provident adipisci?",
-    // },
     ...(JSON.parse(localStorage.getItem("memoStorage")) ?? []),
     ...(JSON.parse(sessionStorage.getItem("memoStorage")) ?? []),
   ];
@@ -65,12 +37,8 @@ async function onload() {
   function drawMemo() {
     // view를 찾아서 div를 만들고 그 안에 memo객체 넣기
     const view = document.querySelector("#view");
-    view.innerHTML = "";
-    //   const demo = document.createElement("div");
-    //   demo.textContent = memo.text;
-    //   demo.style.backgroundColor = memo.bgColor;
-    //   view.appendChild(demo);
-    // ✅ 기존 것 제외하고 추가해야함
+    view.innerHTML = ""; // 기존 목록 초기화
+
     for (const memo of memoData) {
       const memoElement = document.createElement("div");
       memoElement.textContent = memo.text;
@@ -90,7 +58,6 @@ async function onload() {
       const localSaveButton = document.createElement("button");
       localSaveButton.textContent = "로컬 저장";
       localSaveButton.addEventListener("click", () => {
-        //   console.log(localStorage);
         localStorage.setItem(
           "memoStorage",
           JSON.stringify([
@@ -143,7 +110,7 @@ async function onload() {
     memo.text = form.get("memoText");
     memo.bgColor = form.get("memoBgColor");
     memo.link = form.get("memoLink");
-    //   console.log(memo);
+
     memoData.push(memo); // 메모데이터에 push
     drawMemo();
   });
