@@ -43,13 +43,17 @@ async function onload() {
     for (let i = 0; i < memoData.length; i++) {
       const memoElement = document.createElement("div");
       const memo = memoData[i];
+      memoElement.classList.add("memo"); // ✅ 스타일 적용
       memoElement.textContent = memo.text;
       memoElement.style.backgroundColor = memo.bgColor;
       view.appendChild(memoElement);
 
+      const buttonContainer = document.createElement("div");
+      buttonContainer.classList.add("button-container");
+
       // 삭제 버튼
-      // ✅ 해당 객체 삭제.. 추가시 다시 살아나는 문제가 있음
       const deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete-button"); // 🔴 스타일 적용
       deleteButton.textContent = "삭제";
       deleteButton.addEventListener("click", () => {
         // memoElement.remove();
@@ -57,7 +61,8 @@ async function onload() {
         removeFromStorage(memo.id); // 로컬,세션에서 삭제
         drawMemo(); // ui 다시
       });
-      memoElement.appendChild(deleteButton);
+      //   memoElement.appendChild(deleteButton);
+      buttonContainer.appendChild(deleteButton);
 
       // 로컬 저장 버튼
       const localSaveButton = document.createElement("button");
@@ -71,7 +76,8 @@ async function onload() {
           ]) // [...parsedData, memo]
         );
       });
-      memoElement.appendChild(localSaveButton);
+      //   memoElement.appendChild(localSaveButton);
+      buttonContainer.appendChild(localSaveButton);
 
       // 세션 저장 버튼
       const sessionSaveButton = document.createElement("button");
@@ -85,7 +91,8 @@ async function onload() {
           ])
         );
       });
-      memoElement.appendChild(sessionSaveButton);
+      //   memoElement.appendChild(sessionSaveButton);
+      buttonContainer.appendChild(sessionSaveButton);
 
       // 외부 링크 연결 버튼
       if (memo.link) {
@@ -93,8 +100,14 @@ async function onload() {
         const newLinkButton = document.createElement("button");
         nowLinkButton.textContent = "현재 창 열기";
         newLinkButton.textContent = "새 창 열기";
-        memoElement.appendChild(nowLinkButton);
-        memoElement.appendChild(newLinkButton);
+
+        // memoElement.appendChild(nowLinkButton);
+        // memoElement.appendChild(newLinkButton);
+
+        nowLinkButton.classList.add("link-button");
+        newLinkButton.classList.add("link-button");
+        buttonContainer.appendChild(nowLinkButton);
+        buttonContainer.appendChild(newLinkButton);
 
         nowLinkButton.addEventListener(
           "click",
@@ -102,6 +115,9 @@ async function onload() {
         );
         newLinkButton.addEventListener("click", () => window.open(memo.link));
       }
+
+      // 버튼들 추가
+      memoElement.appendChild(buttonContainer);
     } // end of for
   }
 
