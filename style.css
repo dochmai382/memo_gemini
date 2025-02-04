@@ -35,6 +35,11 @@ button {
   border-radius: 4px;
 }
 
+input[type="color"] {
+  width: 100px; /* 원하는 크기로 조정 */
+  height: 40px;
+}
+
 button {
   background-color: #007bff;
   color: white;
